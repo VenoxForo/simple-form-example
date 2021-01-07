@@ -1,25 +1,28 @@
-var express = require('express'),
-	bodyParser = require('body-parser'),
-	IS = require('initial-state');
+// Node.js: HTTP SERVER Handling GET and POST Request 
+// Show HTML Form at GET request.
+// At POST Request: Grab form data and display them.
+// Get Complete Source Code from Pabbly.com
 
-var bucket = IS.bucket('Simple Form Example', process.env.INITIALSTATE_ACCESS_KEY);
 
-// Initialize our Express app.
-var app = express();
+var http = require('http');
+var fs = require('fs');
 
-app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
-  extended: true
-}));
+var server = http.createServer(function (req, res) {
 
-app.get('/temperature', function(req, res) {
-  res.sendFile(__dirname + '/simple_form.html');
-});
+    if (req.method === "GET") {
+        res.writeHead(200, { "Content-Type": "text/html" });
+        fs.createReadStream("./public/form.html", "UTF-8").pipe(res);
+    } else if (req.method === "POST") {
+    
+        var body = "";
+        req.on("data", function (chunk) {
+            body += chunk;
+        });
 
-app.post('/temperature', function(req, res) {
-	var temp = req.body.temp;
-	bucket.push('temperature', temp);
-	res.redirect('/temperature');
-});
+        req.on("end", function(){
+            res.writeHead(200, { "Content-Type": "text/html" });
+            res.end(body);
+        });
+    }
 
-// Listen for incoming requests and serve them.
-app.listen(process.env.PORT || 3000);
+}).listen(3000);
