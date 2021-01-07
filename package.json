@@ -10,7 +10,7 @@
   "license": "MIT",
   "dependencies": {
     "body-parser": "^1.14.1",
-    "express": "^4.13.3",
-    "initial-state": "^0.2.0"
+    "http": "^4.13.3",
+    "fs": "^0.2.0"
   }
 }
